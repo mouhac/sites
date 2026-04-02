@@ -1,0 +1,154 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Un message pour toi</title>
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    body {
+      min-height: 100vh;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      background: linear-gradient(135deg, #ff9a9e, #fad0c4, #ffecd2);
+      font-family: 'Georgia', serif;
+      cursor: pointer;
+      overflow: hidden;
+    }
+
+    .container {
+      text-align: center;
+      user-select: none;
+    }
+
+    .heart {
+      font-size: 100px;
+      animation: beat 1.2s infinite;
+      display: block;
+      margin-bottom: 20px;
+      transition: transform 0.1s;
+    }
+
+    .hint {
+      font-size: 1.2rem;
+      color: #c0607a;
+      opacity: 0.8;
+      letter-spacing: 2px;
+    }
+
+    .message {
+      display: none;
+      font-size: 1.8rem;
+      color: #8b1a4a;
+      max-width: 500px;
+      line-height: 1.8;
+      padding: 30px;
+      background: rgba(255, 255, 255, 0.5);
+      border-radius: 20px;
+      backdrop-filter: blur(10px);
+      box-shadow: 0 8px 32px rgba(200, 50, 100, 0.2);
+      animation: fadeIn 0.6s ease;
+    }
+
+    .message .signature {
+      margin-top: 20px;
+      font-size: 1.1rem;
+      color: #c0607a;
+      font-style: italic;
+    }
+
+    @keyframes beat {
+      0%, 100% { transform: scale(1); }
+      50% { transform: scale(1.15); }
+    }
+
+    @keyframes fadeIn {
+      from { opacity: 0; transform: translateY(20px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+
+    .petal {
+      position: fixed;
+      font-size: 1.5rem;
+      animation: fall linear forwards;
+      pointer-events: none;
+    }
+
+    @keyframes fall {
+      0%   { transform: translateY(-50px) rotate(0deg); opacity: 1; }
+      100% { transform: translateY(110vh) rotate(360deg); opacity: 0; }
+    }
+  </style>
+</head>
+<body>
+
+  <div class="container" id="main">
+    <span class="heart" id="heart">❤️</span>
+    <p class="hint" id="hint">Clique pour moi...</p>
+    <div class="message" id="message">
+      Tu es la personne la plus précieuse de mon univers.<br>
+      Chaque jour à tes côtés est un cadeau que je chéris.<br>
+      Tu es mon sourire, ma lumière, mon tout. 🌹
+      <div class="signature">— Mouhamed Cisse 💕</div>
+    </div>
+  </div>
+
+  <script>
+    const body = document.body;
+    const heart = document.getElementById('heart');
+    const hint = document.getElementById('hint');
+    const message = document.getElementById('message');
+
+    const messages = [
+      "Tu es la personne la plus précieuse de mon univers.\nChaque jour à tes côtés est un cadeau que je chéris.\nTu es mon sourire, ma lumière, mon tout. 🌹",
+      "Avec toi, même les jours ordinaires deviennent extraordinaires. 💖",
+      "Tu fais battre mon cœur un peu plus vite à chaque fois que je pense à toi. 🌸",
+      "Si je devais tout recommencer, je te choisirais encore et encore. ✨",
+      "Tu es ma plus belle histoire. 🥀",
+    ];
+
+    let clicked = false;
+    let msgIndex = 0;
+
+    function spawnPetals() {
+      for (let i = 0; i < 15; i++) {
+        setTimeout(() => {
+          const petal = document.createElement('span');
+          petal.classList.add('petal');
+          petal.textContent = ['🌸', '🌹', '💕', '✨', '🌺'][Math.floor(Math.random() * 5)];
+          petal.style.left = Math.random() * 100 + 'vw';
+          petal.style.animationDuration = (2 + Math.random() * 3) + 's';
+          document.body.appendChild(petal);
+          petal.addEventListener('animationend', () => petal.remove());
+        }, i * 100);
+      }
+    }
+
+    body.addEventListener('click', () => {
+      spawnPetals();
+      heart.style.transform = 'scale(1.4)';
+      setTimeout(() => heart.style.transform = '', 200);
+
+      if (!clicked) {
+        clicked = true;
+        hint.style.display = 'none';
+        message.style.display = 'block';
+      } else {
+        msgIndex = (msgIndex + 1) % messages.length;
+        message.style.animation = 'none';
+        message.offsetHeight; // reflow
+        message.style.animation = 'fadeIn 0.6s ease';
+        message.innerHTML = messages[msgIndex].replace(/\n/g, '<br>') +
+          '<div class="signature">— Mouhamed Cisse 💕</div>';
+      }
+    });
+  </script>
+
+</body>
+</html>
